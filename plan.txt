@@ -1,0 +1,37 @@
+This project will be a simulation of texas hold em' poker. It will be played on the command line. Since there are no graphics everything 
+must be formatted using setw and fixed.
+Parts of my program. 
+
+Objects:
+!Phase1!
+Deck:
+    To be simulated using a 1D array with 52 values.
+player hand:
+    To be simulated with 2 variables card1 and card2 that hold a unique value gathered from the deck array and shown on the command line
+opponent hand:
+    The same as the player hand but noe shown on the command line
+river:
+    to be simulated with 5 variable community1, community2, community3, community4, community5, containing values gathered from the deck array. There will be 2 methods used:
+    Flop to pull 3 cards to the community, fourthstreet to pull another card and river to pull the fifth
+
+!Phase2!
+Money: player money, big blind, low blind, bet, betincrease, betValid pot, betValid All varibles to hold ints
+
+Methods:
+!Phase1!
+    Flop: pull 3 cards from deck array and place them on command line
+    fourthstreet: pull another card and put it on command line
+    river: pull a fifth card and put it on command line
+    bet menu: menu at any time that decides whether to bet, fold, call, check
+    bet: increase betVa by bet, then prompt opponent for call or bet
+    call: match bet and run betValid
+    betValid: increase pot by amount passed ot it
+    fold: forfeit bet and go to menu
+!phase2!
+    opponent bet, call, fold, based on random number generator multiplied by x where x is weight based on game play
+    card randomization, randomize deck array either before deal or as cards are pulled from array
+
+
+step 1:
+Create a deck array and print values, then assign values to player hand and opponent hand variables
+create method fro river pulls, dont worry about deck randomization yet
