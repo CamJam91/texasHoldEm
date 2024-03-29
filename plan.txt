@@ -34,4 +34,9 @@ Methods:
 
 step 1:
 Create a deck array and print values, then assign values to player hand and opponent hand variables
+Since an array can only hold one type of value each card will be represented by just a number. I will use either parallel arrays to simulate suite or a function that
+    translates this for the user. 
 create method fro river pulls, dont worry about deck randomization yet
+
+#Pins#
+Figure if there is a way to use encoding other than ascii to output heart symbol and others
