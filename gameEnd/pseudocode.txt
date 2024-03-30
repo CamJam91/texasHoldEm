@@ -1,0 +1,2 @@
+Check hand database and compare each hand with the highest value card in database
+if each hand matches same then high card is compared

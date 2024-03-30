@@ -1,0 +1,26 @@
+At the run of the program and after every game we are taken back to main menu
+There is also an in game menu that has context for the game being played
+
+!2: represents phase 2. Code that can be added to the program later
+Main menu:
+    !2 Save player money in file??
+    use do while and switch case for:
+        exit option
+        deal option
+    
+Game menu:
+use do while and switch case:
+        check: only if there is no bet on table
+        bet
+        fold
+once player and opponent check initiate flop
+back to game menu
+player and opponent check initiate fourth street
+back to game menu
+same for fifth street
+once both players check game end 
+    
+
+        
+
+    
