@@ -1,11 +1,11 @@
 1. Royal flush
-
+    if straight and flush startin at rf position
 2. straight flush
-
+    if straight and flush 
 3. four-of-a-kind
-    
+    if playerCardNum[any] == playerCardNum[any] 3 more times
 4. full house
-    if three of a kind && pari
+    if three of a kind && pair
 5. flush
     if playerCardSuit[any] = playerCardSuit[any] 3 more times
 
@@ -22,6 +22,10 @@
 
 9. One Pair
     if playerCardNum[any] == playerCardNum[any]
+    for each card:
+        does card match card position + 1
+        if yes then match == true
+    end for
 
 10. High card & tie
     if playerCardNum == 1 || playerCardNum > opponentCardNum 
