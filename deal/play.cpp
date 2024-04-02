@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
-#include <ctime>
 using namespace std;
 
-void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit); //2 vectors are referenced: the number of the card and the suit, an int will hold number, and char will hold suit
+void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit); //2 vectors are referenced: the number of the card and the suit, an int will hold number,
+//and char will hold suit
 int randomGen(); //calls and returns nrandom number
+int play(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit); //Since play will call draw we need to pass parameters to it so we can in turn pass those to draw
 
 int main(){
     //for the random number generator
@@ -22,34 +23,14 @@ int main(){
         //oponent hand vectors
     vector<int> opponentHandNum; 
     vector<char> opponentHandSuit;
-    int userOption = 0;       //for menu operability
-    int handSize = 0;         //useful for cout'ing our vector
-    int pool = 0;
-    int
-    do{ 
-        cout << "Let's play some Texas Hold 'em!" << endl
-        << "1. Deal" << endl << "2. Quit" << endl;
+    int userOption = 0;
+    do {
+        cout << "Lets play some Hold 'em" << endl << "1.Deal \n2.Quit";
         cin >> userOption;
         if (userOption == 1){
-                //player hand
-            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-                //opponentHAnd
-            draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
-            draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
-            handSize += 2;  //increase handSize by two
-                //show player his hand
-            cout << "Your hand: " << endl;
-            for (int count = 0; count < handSize; count++){
-                cout << playerHandNum[count] << playerHandSuit[count] //shows num and suit togther
-                << " ";
-            }
-            cout << endl;
-            cout << "1. Che"
-            }
-    }
-    while (userOption != 2);
-}
+            play(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+        }
+    }while(userOption != 2);
 
     
     /* test :
@@ -61,7 +42,7 @@ int main(){
     }
     return 0;
     */
-
+}
 
 void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit){ //2 vectors are referenced: the number of the card and the suit, an int will hold number, and char will hold suit
     int randomNum = randomGen();    //Weput the random number into a variable so we can use it in multiple instances
@@ -79,6 +60,9 @@ void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<
 int randomGen(){
     return (rand() % 52);
 }
+
+int play(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit){}; //Since play will call draw we need to pass parameters to it so we can in turn pass those to draw
+
 
 
 /* Problem: When I run my test for assigning hands 0's are being pulled. 
