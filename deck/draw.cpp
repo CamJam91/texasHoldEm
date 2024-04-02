@@ -23,7 +23,7 @@ int main(){
     vector<char> opponentHandSuit;
 
     
-    /* test :
+    test :
     for (int i = 0; i < 20; i++){
         draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
     }
@@ -31,7 +31,7 @@ int main(){
         cout << playerHandNum[i] << playerHandSuit[i] << endl;
     }
     return 0;
-    */
+    
 }
 
 void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit){ //2 vectors are referenced: the number of the card and the suit, an int will hold number, and char will hold suit
