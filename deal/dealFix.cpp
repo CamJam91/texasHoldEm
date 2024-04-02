@@ -1,14 +1,15 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit); //2 vectors are referenced: the number of the card and the suit, an int will hold number, and char will hold suit
 int randomGen(); //calls and returns nrandom number
 
+//for the random number generator
+unsigned seed = time(0);
+int srand(seed);
 int main(){
-    //for the random number generator
-    unsigned seed = time(0);
-    srand(seed);
 
         //deck arrays
     char DECK_SUIT[52] = {'H','H','H','H','H','H','H','H','H','H','H','H','H','C','C','C','C','C','C','C','C','C','C','C','C','C','D','D','D','D','D','D','D','D','D','D','D','D','D','S','S','S','S','S','S','S','S','S','S','S','S','S'};//Suits. H = hearts and so on
@@ -21,6 +22,32 @@ int main(){
         //oponent hand vectors
     vector<int> opponentHandNum; 
     vector<char> opponentHandSuit;
+    int userOption = 0;       //for menu operability
+    int handSize = 0;         //useful for cout'ing our vector
+    do{ 
+        cout << "Let's play some Texas Hold 'em!" << endl
+        << "1. Deal" << endl << "2. Quit" << endl;
+        cin >> userOption;
+        if (userOption == 1){
+                //player hand
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+                //opponentHAnd
+            draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
+            draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
+            handSize += 2;  //increase handSize by two
+                //show player his hand
+            cout << "Your hand: " << endl;
+            for (int count = 0; count < handSize; count++){
+                cout << playerHandNum[count] << playerHandSuit[count] //shows num and suit togther
+                << " ";
+            }
+            cout << endl;
+            
+            }
+    }
+    while (userOption != 2);
+}
 
     
     /* test :
@@ -32,7 +59,7 @@ int main(){
     }
     return 0;
     */
-}
+
 
 void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit){ //2 vectors are referenced: the number of the card and the suit, an int will hold number, and char will hold suit
     int randomNum = randomGen();    //Weput the random number into a variable so we can use it in multiple instances
