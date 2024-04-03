@@ -33,7 +33,6 @@ int main(){
                 //opponent hand
             draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
             draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
-            cout << "Your hand: " << endl; 
             for (int count = 0; count < 2; count++){
                 cout << playerHandNum[count] << playerHandSuit[count] << " ";
             }

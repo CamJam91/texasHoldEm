@@ -1,0 +1,22 @@
+variables: stake, pool
+
+if stake == 0:
+    1 check: adds (bet)money to the pool, for check this is zero
+    2. bet: raise stake by (bet). If a stake exists this is called a raise
+    3. fold: end game: stake is commited to pool and winner gets pool
+end if
+
+while stake != 0
+    1. call: same as check
+    2. raise: same as bet
+    3. fold
+end while
+
+continue play
+
+If bet returns a value that means either the stake has been raised or called. if raised i can take that 
+return value and use it for counter bet but theres not way to know if call was used. I will try to create
+a passable varibale that turns on or off depending on if check was used
+    or
+Pass a variable called stake to the bet function and use the function to add money, and make bet
+a boolean that is true if there was a call or check and false if otherwise
