@@ -40,3 +40,5 @@ create method fro river pulls, dont worry about deck randomization yet
 
 #Pins#
 Figure if there is a way to use encoding other than ascii to output heart symbol and others
+If i use a do while statement to run my program I need to use pop_back to empty array, I also need
+to reassign my deck values

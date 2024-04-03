@@ -5,7 +5,6 @@ using namespace std;
 void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit); //2 vectors are referenced: the number of the card and the suit, an int will hold number,
 //and char will hold suit
 int randomGen(); //calls and returns nrandom number
-int play(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit); //Since play will call draw we need to pass parameters to it so we can in turn pass those to draw
 
 int main(){
     //for the random number generator
@@ -25,23 +24,61 @@ int main(){
     vector<char> opponentHandSuit;
     int userOption = 0;
     do {
-        cout << "Lets play some Hold 'em" << endl << "1.Deal \n2.Quit";
+        cout << "1.Deal \n2.Quit\n";
         cin >> userOption;
-        if (userOption == 1){
-            play(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+        if (userOption == 1){ 
+                //player hand
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+                //opponent hand
+            draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
+            draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
+            cout << "Your hand: " << endl; 
+            for (int count = 0; count < 2; count++){
+                cout << playerHandNum[count] << playerHandSuit[count] << " ";
+            }
+            cout << endl;
+            //bet() function here;
+            //flop
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+                //since these cards are community we assign the values to opponent array
+            for (int hand = 2; hand < 5; hand++){
+                int numFill = playerHandNum[hand]; //fill variable with player card num value
+                int suitFill = playerHandSuit[hand]; //fill variable with player card suit value
+                opponentHandNum.push_back(numFill);
+                opponentHandSuit.push_back(suitFill);   //share values with opponent hand
+            }
+            //bet() function here;
+            //fourth street
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);   //draw another community card
+                int numFill = playerHandNum[5]; //fill variable with player card num value
+                int suitFill = playerHandSuit[5]; //fill variable with player card suit value
+                opponentHandNum.push_back(numFill);
+                opponentHandSuit.push_back(suitFill);   //share values with opponent hand
+            //bet() function here;
+            //river
+            draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);   //draw another community card
+                numFill = playerHandNum[6]; //fill variable with player card num value
+                suitFill = playerHandSuit[6]; //fill variable with player card suit value
+                opponentHandNum.push_back(numFill);
+                opponentHandSuit.push_back(suitFill);   //share values with opponent hand
+            //bet() function here;
+            //test
+            cout << "player hand: " << endl;
+            for (int count = 0; count < 7; count++){
+                cout << playerHandNum[count] << playerHandSuit[count] << " ";
+            }
+            cout << endl;
+            cout << "opponent hand: " << endl;
+            for (int count = 0; count < 7; count++){
+                cout << opponentHandNum[count] << opponentHandSuit[count] << " ";
+            }
+            cout << endl;
         }
     }while(userOption != 2);
 
-    
-    /* test :
-    for (int i = 0; i < 20; i++){
-        draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-    }
-    for (int i = 0; i < 20; i++){
-        cout << playerHandNum[i] << playerHandSuit[i] << endl;
-    }
-    return 0;
-    */
 }
 
 void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit){ //2 vectors are referenced: the number of the card and the suit, an int will hold number, and char will hold suit
@@ -57,11 +94,11 @@ void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<
     cardNum[randomNum] = 0;             //We set the card that was pulled to 0 to ensure it isn't pulled again
 }
 
+
 int randomGen(){
     return (rand() % 52);
 }
 
-int play(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit){}; //Since play will call draw we need to pass parameters to it so we can in turn pass those to draw
 
 
 
