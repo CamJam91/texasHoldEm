@@ -1,4 +1,4 @@
-variables: stake, pool
+variables: stake
 
 if stake == 0:
     1 check: adds (bet)money to the pool, for check this is zero
