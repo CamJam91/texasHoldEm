@@ -5,7 +5,7 @@ using namespace std;
 void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<char>&handSuit); //2 vectors are referenced: the number of the card and the suit, an int will hold number,
 //and char will hold suit
 int randomGen(); //calls and returns nrandom number
-int bet(int&, int&);
+bool bet(int&, int&);
 
 int main(){
     //for the random number generator
@@ -15,6 +15,7 @@ int main(){
         //deck arrays
     char DECK_SUIT[52] = {'H','H','H','H','H','H','H','H','H','H','H','H','H','C','C','C','C','C','C','C','C','C','C','C','C','C','D','D','D','D','D','D','D','D','D','D','D','D','D','S','S','S','S','S','S','S','S','S','S','S','S','S'};//Suits. H = hearts and so on
     int DECK_NUM[52] = {1,2,3,4,5,6,7,8,9,10,11,12,13,1,2,3,4,5,6,7,8,9,10,11,12,13,1,2,3,4,5,6,7,8,9,10,11,12,13,1,2,3,4,5,6,7,8,9,10,11,12,13};   //the 1 represents Ace and the 11, 12, 13 represent jack, queen, king respectively
+
         //hand vectors
     //These vectors are parallel and should always be the same size, their initial size is 0 and will only need to be expanded to 7
         //player hand vectors
@@ -23,12 +24,16 @@ int main(){
         //oponent hand vectors
     vector<int> opponentHandNum; 
     vector<char> opponentHandSuit;
-    int userOption = 0;
+    int numFill = -1,
+    suitFill = -1;  //for assigning proper values to hands
+    int userOption = 0; //used for menu
     //money
     int playerMoney = 100,  //overall wallet
     pool = 0,               //winnings for each hand
     stake = 0;              //to be added to the pool
+    bool fold = false;      //if this returns true hand ends
     do {
+        cout << "Money: $" << playerMoney << endl;  //display playerMoney
         cout << "1.Deal \n2.Quit\n";
         cin >> userOption;
         if (userOption == 1){ 
@@ -38,11 +43,25 @@ int main(){
                 //opponent hand
             draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
             draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
+
+            cout << "Money: $" << playerMoney << endl;  //display playerMoney
+            cout << "Pool: $" << pool << endl;          //display pool
+
+                //shows player their hand
             for (int count = 0; count < 2; count++){
                 cout << playerHandNum[count] << playerHandSuit[count] << " ";
             }
             cout << endl;
+
             //bet() function here;
+            fold = bet(stake, playerMoney); //stake and money ints are passed as ref and we assign bet to fold 
+            //bc it will return a true if a fold has happened
+            //AI bet will go here
+            pool+=stake;    //we add stake to the pool
+            stake = 0;      //reset stake for next bet
+            if (fold == true){  //this is a quick fix, we need to figure a way to not exit program
+                break;
+            }   //ends hand if a fold has happened
             
             //flop
             draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
@@ -50,27 +69,71 @@ int main(){
             draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                 //since these cards are community we assign the values to opponent array
             for (int hand = 2; hand < 5; hand++){
-                int numFill = playerHandNum[hand]; //fill variable with player card num value
-                int suitFill = playerHandSuit[hand]; //fill variable with player card suit value
+                numFill = playerHandNum[hand]; //fill variable with player card num value
+                suitFill = playerHandSuit[hand]; //fill variable with player card suit value
                 opponentHandNum.push_back(numFill);
                 opponentHandSuit.push_back(suitFill);   //share values with opponent hand
             }
+
+            cout << "Money: $" << playerMoney << endl;  //display playerMoney
+            cout << "Pool: $" << pool << endl;          //display pool
+
+            //show player their hand and community cards
+            for (int count = 0; count < 5; count++){
+                cout << playerHandNum[count] << playerHandSuit[count] << " ";
+            }
+            cout << endl;
             //bet() function here;
+            fold = bet(stake, playerMoney);
+            pool+=stake;
+            stake = 0;
+            if (fold == true){
+                break;
+            }
             //fourth street
             draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);   //draw another community card
-                int numFill = playerHandNum[5]; //fill variable with player card num value
-                int suitFill = playerHandSuit[5]; //fill variable with player card suit value
+                numFill = playerHandNum[5]; //fill variable with player card num value
+                suitFill = playerHandSuit[5]; //fill variable with player card suit value
                 opponentHandNum.push_back(numFill);
                 opponentHandSuit.push_back(suitFill);   //share values with opponent hand
+
+            cout << "Money: $" << playerMoney << endl;  //display playerMoney
+            cout << "Pool: $" << pool << endl;          //display pool
+
+             //show player their hand and community cards
+            for (int count = 0; count < 6; count++){
+                cout << playerHandNum[count] << playerHandSuit[count] << " ";
+            }
             //bet() function here;
+            fold = bet(stake, playerMoney);
+            pool+=stake;
+            stake = 0;
+            if (fold == true){
+                break;
+            }
             //river
             draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);   //draw another community card
                 numFill = playerHandNum[6]; //fill variable with player card num value
                 suitFill = playerHandSuit[6]; //fill variable with player card suit value
                 opponentHandNum.push_back(numFill);
                 opponentHandSuit.push_back(suitFill);   //share values with opponent hand
+            
+            cout << "Money: $" << playerMoney << endl;  //display playerMoney
+            cout << "Pool: $" << pool << endl;          //display pool
+
+                 //show player their hand and community cards
+            for (int count = 0; count < 7; count++){
+                cout << playerHandNum[count] << playerHandSuit[count] << " ";
+            }
+            cout << endl;
             //bet() function here;
-            //test
+            fold = bet(stake, playerMoney);
+            pool+=stake;
+            stake = 0;
+            if (fold == true){
+                break;
+            }
+            /*//test
             cout << "player hand: " << endl;
             for (int count = 0; count < 7; count++){
                 cout << playerHandNum[count] << playerHandSuit[count] << " ";
@@ -80,7 +143,7 @@ int main(){
             for (int count = 0; count < 7; count++){
                 cout << opponentHandNum[count] << opponentHandSuit[count] << " ";
             }
-            cout << endl;
+            cout << endl;*/
         }
     }while(userOption != 2);
 
@@ -99,7 +162,7 @@ void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<
     cardNum[randomNum] = 0;             //We set the card that was pulled to 0 to ensure it isn't pulled again
 }
 
-int bet(int& stake, int& money){ //pass stake as a reference so we can add to it. Pass player or opponent money to affect it
+bool bet(int& stake, int& money){ //pass stake as a reference so we can add to it. Pass player or opponent money to affect it
     int bet = 0; //This holds bet to be added to stake. It ensures proper bet amount is entered
     int userOption = 0;
     string betPrompt = "";  //This is so we can change prompt bsed on user input
@@ -131,9 +194,9 @@ int bet(int& stake, int& money){ //pass stake as a reference so we can add to it
             money-=bet; //player "pays" money
             stake+=bet; //player "money" is put into stake
             break; //if this is call the math here doesn't matter as stake is 0 and nothing is + or -
-        case 3: return 3;   //game needs to immediatley end, 3 will be used to clean up
+        case 3: return true;   //game needs to immediatley end, 3 will be used to clean up
     }
-    return 0;
+    return false;
 }
 
 

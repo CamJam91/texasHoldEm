@@ -29,3 +29,10 @@
 
 10. High card & tie
     if playerCardNum == 1 || playerCardNum > opponentCardNum 
+    1. for every card in players hand is card > playerHigh
+        if so : playerHigh = card
+    2. for every card in opponents hand is card > opponentHigh
+        if so : opponnetHigh = card
+    3. if playerHigh > opponentHigh : player win
+        else if playerHigh == opponentHigh : draw
+        else: player lose
