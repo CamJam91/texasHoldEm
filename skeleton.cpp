@@ -8,7 +8,7 @@ void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<
 bool bet(int&, int&);
 int menu (int);
 void display(vector<int> , vector<char>, int, int, int, int);
-void handMimic(vector<int>, vector<char>, vector<int>&, vector<char>&, int, int);
+void handMimic(vector<int>, vector<char>, vector<int>&, vector<char>&, int);
 int randomGen();
 
 int main(){
@@ -57,7 +57,9 @@ int main(){
                 draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                 draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                 draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-                handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit, 5,2);//copy community cards to opponent hand
+                handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,3);//copy community cards to opponent hand
+                handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,4);
+                handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,5);
                 display (playerHandNum, playerHandSuit, pool, stake, 5, playerMoney);   //show player pertinent info
                 fold = bet(stake, playerMoney);
                 pool+=stake;    //we add stake to the pool
@@ -65,7 +67,7 @@ int main(){
                     if (fold == false){  //If a fold has occured the rest of the modules are skipped
                     //fourth street
                     draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-                    handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit, 6,5);//copy community cards to opponent hand
+                    handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit, 6);//copy community cards to opponent hand
                     display (playerHandNum, playerHandSuit, pool, stake, 6, playerMoney);   //show player pertinent info
                     fold = bet(stake, playerMoney);
                     pool+=stake;    //we add stake to the pool
@@ -73,12 +75,19 @@ int main(){
                         if (fold == false){  //If a fold has occured the rest of the modules are skipped
                         //fifth street, "river"
                         draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-                        handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit, 7,6);//copy community cards to opponent hand
+                        handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit, 7);//copy community cards to opponent hand
                         display (playerHandNum, playerHandSuit, pool, stake, 7, playerMoney);   //show player pertinent info
                         fold = bet(stake, playerMoney);
                         pool+=stake;    //we add stake to the pool
                         stake = 0;      //reset stake for next bet
                         display (opponentHandNum, opponentHandSuit, pool, stake, 7, playerMoney);   //show player pertinent info
+                        }
+                        if (fold == false){
+                            //Now we decide the winner. We need to loop through each poker funciton, starting with highest until we find a winner
+                            display (playerHandNum, playerHandSuit, pool, stake, 7, playerMoney);
+                            cout << "Opponents cards: " << opponentHandNum[0] << opponentHandSuit[0] << " "<< opponentHandNum[6] << opponentHandSuit[6] << endl;
+                            
+
                         }
 
                 }
@@ -89,16 +98,15 @@ int main(){
 
 }
 
-void handMimic(vector<int>playerNum, vector<char>playerSuit, vector<int>&opponentNum, vector<char>&opponentSuit, int handSize, int missing){//The first 2 vectors are read only but the second are changed so we pass a reference to vector address
+void handMimic(vector<int>playerNum, vector<char>playerSuit, vector<int>&opponentNum, vector<char>&opponentSuit, int missing){//The first 2 vectors are read only but the second are changed so we pass a reference to vector address
     //since flop and street are community cards they need to be copied into opponent hand
+    //the missing parameter is where we pass the subscript of the community cards that we need to copy
     int numFill;
     char suitFill;   //interum variables to hold hand values
-    for (int card = missing; card < handSize; card++){ //counter, card starts at whatever card is missing from opponent hand bc there will always be 2 cards from initial deal, we stop when hand size is reached
-        numFill = playerNum[card];
-        suitFill = playerSuit[card]; //hold "community" cards
-        opponentNum.push_back(numFill);
-        opponentSuit.push_back(suitFill);   //push values to opponent vector
-    }
+    numFill = playerNum[missing-1]; 
+    suitFill = playerSuit[missing-1];
+    opponentNum.push_back(numFill);
+    opponentSuit.push_back(suitFill);   //push values to opponent vector
 }
 
 void display(vector<int>handNum, vector<char> handSuit, int pool, int stake, int handSize, int money){
