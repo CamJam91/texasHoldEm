@@ -29,4 +29,6 @@ void handMimic(vector<int>playerNum, vector<char>playerSuit, vector<int>&opponen
     suitFill = playerSuit[missing-1];
     opponentNum.push_back(numFill);
     opponentSuit.push_back(suitFill);   //push values to opponent vector
+    //This function takes in the parallel player hand arrays and the parallel opponent hand arrays. It also takes the index that needs to be copied. 
+    //Because it works with one index at a time it needs to be called for every card that needs copied.  
 }

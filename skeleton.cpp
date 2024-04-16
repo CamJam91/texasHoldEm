@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<ctime>
+#include<iomanip>
 using namespace std;
 
     //function prototypes
@@ -10,6 +11,8 @@ int menu (int);
 void display(vector<int> , vector<char>, int, int, int, int);
 void handMimic(vector<int>, vector<char>, vector<int>&, vector<char>&, int);
 int randomGen();
+
+
 
 int main(){
     //arrays
@@ -25,10 +28,14 @@ int main(){
     vector<int> opponentHandNum; 
     vector<char> opponentHandSuit;
 
+    
+    
     //for the random number generator
     unsigned seed = time(0);
     srand(seed);
 
+    
+    
     //variables for play
     int userOption = 0;     //for menu option
         //money
@@ -37,57 +44,71 @@ int main(){
     stake = 0;              //money added to pool
     bool fold = false;      //if this is true, hand ends
     
+
+
     do {    //while loopo for menu
         userOption = menu(playerMoney); //cout prompt and fills userOption
         if (userOption == 1){    //if player doeesn't quit start play
-                //player hand
+                //draw 2 cards for player hand
             draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
             draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-                //opponent hand
+                //draw 2 cards for opponent hand
             draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
             draw(DECK_NUM, DECK_SUIT, opponentHandNum, opponentHandSuit);
 
+                //player options after draw
             display (playerHandNum, playerHandSuit, pool, stake, 2, playerMoney);   //show player pertinent info
             fold = bet(stake, playerMoney); //every draw is followed by a bet
             //bet works like our other void functions but it returns true if there is a fold
             pool+=stake;    //we add stake to the pool
             stake = 0;      //reset stake for next bet
+
+
             if (fold == false){  //If a fold has occured the rest of the modules are skipped
-                //Flop call draw function for 3 cards
+                //Flop call draw function for 3 cards. Since they are community cards we only call draw for player hand
+                //and copy them to opponent hand
                 draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                 draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                 draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                 handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,3);//copy community cards to opponent hand
                 handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,4);
                 handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,5);
+                
                 display (playerHandNum, playerHandSuit, pool, stake, 5, playerMoney);   //show player pertinent info
                 fold = bet(stake, playerMoney);
                 pool+=stake;    //we add stake to the pool
                 stake = 0;      //reset stake for next bet
+
+
                     if (fold == false){  //If a fold has occured the rest of the modules are skipped
                     //fourth street
                     draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                     handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit, 6);//copy community cards to opponent hand
+                    
                     display (playerHandNum, playerHandSuit, pool, stake, 6, playerMoney);   //show player pertinent info
                     fold = bet(stake, playerMoney);
                     pool+=stake;    //we add stake to the pool
                     stake = 0;      //reset stake for next bet
+                        
+                        
                         if (fold == false){  //If a fold has occured the rest of the modules are skipped
                         //fifth street, "river"
                         draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
                         handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit, 7);//copy community cards to opponent hand
+                        
                         display (playerHandNum, playerHandSuit, pool, stake, 7, playerMoney);   //show player pertinent info
                         fold = bet(stake, playerMoney);
                         pool+=stake;    //we add stake to the pool
                         stake = 0;      //reset stake for next bet
+                        
                         display (opponentHandNum, opponentHandSuit, pool, stake, 7, playerMoney);   //show player pertinent info
                         }
+                        
                         if (fold == false){
                             //Now we decide the winner. We need to loop through each poker funciton, starting with highest until we find a winner
                             display (playerHandNum, playerHandSuit, pool, stake, 7, playerMoney);
-                            cout << "Opponents cards: " << opponentHandNum[0] << opponentHandSuit[0] << " "<< opponentHandNum[6] << opponentHandSuit[6] << endl;
-                            
-
+                            cout << "Opponents cards: " << opponentHandNum[0] << opponentHandSuit[0] << " "<< opponentHandNum[1] << opponentHandSuit[1] << endl;
+                            //*****put end game functions here******//
                         }
 
                 }
@@ -107,17 +128,49 @@ void handMimic(vector<int>playerNum, vector<char>playerSuit, vector<int>&opponen
     suitFill = playerSuit[missing-1];
     opponentNum.push_back(numFill);
     opponentSuit.push_back(suitFill);   //push values to opponent vector
+    //This function takes in the parallel player hand arrays and the parallel opponent hand arrays. It also takes the index that needs to be copied. 
+    //Because it works with one index at a time it needs to be called for every card that needs copied.  
 }
 
 void display(vector<int>handNum, vector<char> handSuit, int pool, int stake, int handSize, int money){
     //this function has a lot of parameters as it displays all info to player except opponents hand
-    cout << "Money: $" << money << endl; //display player money
-    cout << "Pool: $" << pool << endl; //current pool
-    cout << "Stake: $" << stake << endl; //current bet if any
+    cout << "Money: " << setw(10) << "$" << money << endl; //display player money
+    cout << "Pool: " << setw(11) << "$" << pool << endl; //current pool
+    cout << "Stake: " << setw(10) << "$" << stake << endl; //current bet if any
 
-    for (int count = 0; count < handSize; count++){ //for loop to display each card in players hand vector depending on size
-        cout << handNum[count] << handSuit[count] << " ";
-    }
+    //These two for loop sare the same but one is formatted as a hand and the other as community cards. They make the 
+    //ints appear as face Cards to the player. 
+    cout << "Hand:" << endl;
+    for (int card = 0; card < 2; card++){
+            switch (handNum[card]){
+                case 13: cout << "K" << handSuit[card] << " ";
+                break;
+                case 12: cout << "Q" << handSuit[card] << " ";
+                break;
+                case 11: cout << "J" << handSuit[card] << " ";
+                break;
+                case 1: cout << "A" << handSuit[card] << " ";
+                break;
+                default: cout << handNum[card] << handSuit[card] << " ";} //if card isnt a face just output it like normal
+        }
+        cout << endl;
+    if (handSize > 2){
+        cout << "Community: " << endl;
+        for (int card = 2; card < handSize;card++){
+            switch (handNum[card]){
+                    case 13: cout << "K" << handSuit[card] << " ";
+                    break;
+                    case 12: cout << "Q" << handSuit[card] << " ";
+                    break;
+                    case 11: cout << "J" << handSuit[card] << " ";
+                    break;
+                    case 1: cout << "A" << handSuit[card] << " ";
+                    break;
+                    default: cout << handNum[card] << handSuit[card] << " ";
+                    break;}
+                    }
+                    cout << endl;
+                    }
 }
 
 int menu(int money){
