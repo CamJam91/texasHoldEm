@@ -1,0 +1,42 @@
+initialize player and opponent hand vectors
+initialize seed for random num generator
+initialize userOption
+           player money
+           stake
+           pool
+initialize fold to false
+do loop start
+    initialize parallel deck arrays
+    user option == menu function return
+    if user option == play
+        draw twice for player
+        draw twice for opponent
+
+        display function
+        fold = player bet
+        if !fold
+            fold = opponent bet
+        while bet!= 0 && !fold
+            fold = player bet
+            if !fold
+                fold = opponent Bet
+        pool+=stake
+        stake = 0
+
+        if !fold
+            draw 3 for player
+            mimic function
+            repeat previous
+        else popback number of cards 
+
+        if !fold
+            repeat previous for fourth and fifth
+        else popback number of cards 
+
+        after last bet if !fold
+            display function
+            display opponent cards
+            pass player hand to straight function
+            pass opponent hand to straight function
+            
+                
