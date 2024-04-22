@@ -5,6 +5,7 @@ using namespace std;
 
 void highCheck(vector<int>, vector<int>, int, int&);
 int highCard(vector<int>);
+void threeCheck(vector<int>, vector<int>, int, int&);
 
 
 int main(){
