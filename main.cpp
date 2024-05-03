@@ -2,6 +2,7 @@
 #include<vector>
 #include<ctime>
 #include<iomanip>
+#include<fstream>
 using namespace std;
 
 //function prototypes
@@ -20,11 +21,11 @@ int pairs(vector<int>);
 bool threeKind(vector<int>);
 bool fourKind(vector<int>);
 bool flush(vector<char>);
-void highCheck(vector<int>, vector<int>, int, int&);
-void pairCheck(vector<int>, vector<int>, int, int&);
-void threeCheck(vector<int>, vector<int>, int, int&);
-void fourCheck(vector<int>, vector<int>, int, int&);
-void flushCheck(vector<char>, vector<char>, vector<int>, vector<int>, int, int&);
+void highCheck(vector<int>, vector<int>, int&, int&);
+void pairCheck(vector<int>, vector<int>, int&, int&);
+void threeCheck(vector<int>, vector<int>, int&, int&);
+void fourCheck(vector<int>, vector<int>, int&, int&);
+void flushCheck(vector<char>, vector<char>, vector<int>, vector<int>, int&, int&);
 
 
 
@@ -46,7 +47,12 @@ int main(){
     //variables for play
     int userOption = 0;     //for menu option
         //money
-    int playerMoney = 100;  //overall wallet
+        //open wallet file for player money
+    fstream wallet; //we will use this for reading and writing file
+    wallet.open("wallet.txt", ios::in);
+    int playerMoney;  //overall wallet
+    wallet >> playerMoney;
+    wallet.close();     //put int from wallet into player money then close
 
 
     //menu and play loop
@@ -109,7 +115,7 @@ int main(){
                 if (!fold){
                     //fourth street
                     draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-                    handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,4);
+                    handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,6);
 
                     handDisplay(playerHandNum, playerHandSuit,6);
                     moneyDisplay(pool, stake, playerMoney);
@@ -119,38 +125,52 @@ int main(){
                         if (!fold) //if player folds dont trigger ai bet 
                             fold = opponentBet(stake,pool);  //ai function that will call check bet or fold
                     }while(stake!=0 && !fold);
-                if (fold)
-                   popNumber = 6; //used to reset hand vector 
+                }
+                if (fold){
+                   popNumber = 6;} //used to reset hand vector
 
-                    if (!fold){
-                        //fifth street, "river"
-                        draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
-                        handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,4);
+                if (!fold){
+                    //fifth street, "river"
+                    draw(DECK_NUM, DECK_SUIT, playerHandNum, playerHandSuit);
+                    handMimic(playerHandNum, playerHandSuit, opponentHandNum, opponentHandSuit,7);
 
-                        handDisplay(playerHandNum, playerHandSuit,7);
-                        moneyDisplay(pool, stake, playerMoney);
-                        do{
+                    handDisplay(playerHandNum, playerHandSuit,7);
+                    moneyDisplay(pool, stake, playerMoney);
+                    do{
                         fold = bet(stake, playerMoney, pool); //every draw is followed by a bet
                         //bet works like our other void functions but it returns true if there is a fold
                         if (!fold) //if player folds dont trigger ai bet 
                             fold = opponentBet(stake,pool);  //ai function that will call check bet or fold
                         }while(stake!=0 && !fold);
-                if (fold)
-                   popNumber = 7; //used to reset hand vector 
-                    }
-                    if (!fold){ //now hands are checked for winner  
-                        popNumber = 7;
-                        handDisplay(playerHandNum, playerHandSuit,7);
-                        cout << "Opponent ";
-                        handDisplay(opponentHandNum, opponentHandSuit,2); //Show 2 opponent cards 
-                        
-                    }
                 }
+                if (fold){
+                   popNumber = 7;} //used to reset hand vector 
+                if (!fold){ //now hands are checked for winner  
+                    popNumber = 7;
+                    handDisplay(playerHandNum, playerHandSuit,7);
+                    cout << "Opponent ";
+                    handDisplay(opponentHandNum, opponentHandSuit,2); //Show 2 opponent cards 
+
+                    // call each winning algorithm to check each hand for winner
+                    flushCheck(playerHandSuit, opponentHandSuit, playerHandNum, opponentHandNum, pool, playerMoney);
+                    if (pool != 0)  //if a winner is declared then pool is set to 0 in each function. we should thne end 
+                        fourCheck(playerHandNum, opponentHandNum, pool, playerMoney);
+                    if (pool != 0)
+                        threeCheck(playerHandNum, opponentHandNum, pool, playerMoney);
+                    if (pool != 0)
+                        pairCheck(playerHandNum, opponentHandNum, pool, playerMoney);
+                    if (pool != 0)
+                        highCheck(playerHandNum, opponentHandNum, pool, playerMoney);
+                    }
+                handReset(playerHandNum, playerHandSuit, popNumber);//reset both hand vectors
+                handReset(opponentHandNum, opponentHandSuit, popNumber);
             }
-        } 
-        handReset(playerHandNum, playerHandSuit, popNumber);//reset both hand vectors
-        handReset(opponentHandNum, opponentHandSuit, popNumber);
+        }
     }while(userOption != 2);
+    wallet.open("wallet.txt", ios::out);
+    wallet << playerMoney;  //open wallet for output now, and replace int with new player money total
+
+    return 0;
 }
 
 
@@ -276,7 +296,7 @@ void handReset(vector<int>& handNum, vector<char>& handSuit, int popNum){
 
 
 /*****************************************************************************
-     **************Bet and AI functions****************************************
+**************Bet and AI functions****************************************
     ******************************************************************************/
 bool opponentBet(int& stake, int& pool){
     cout << "opponent checks" << endl;
@@ -413,27 +433,30 @@ bool flush(vector<char>handSuit){
 
         /********Hand Checks for main*************/
 
-void highCheck(vector<int> playerHandNum, vector<int>opponentHandNum, int pool, int& playerMoney){ //playerMoney needs to be passed as a reference so we can add to it
+void highCheck(vector<int> playerHandNum, vector<int>opponentHandNum, int &pool, int& playerMoney){ //playerMoney needs to be passed as a reference so we can add to it
     int playerHigh = highCard(playerHandNum);
     int opponentHigh = highCard(opponentHandNum);//return highest value card
     
-    if (playerHigh > opponentHigh){
+    if ((playerHigh > opponentHigh) || (playerHigh == 1 && opponentHigh != 1)){
         cout << "You win with a High Card!" << endl << "Winnings: $"
         << pool << endl;
         playerMoney+=pool;
+        pool = 0;
         
-    }else if(opponentHigh > playerHigh){
+    }else if(opponentHigh > playerHigh || (playerHigh != 1 && opponentHigh == 1)){
         cout << "You lose." << endl << "Pool: $" << pool <<endl;
+        pool = 0;
     }else{
         cout << "Draw" << endl << "Split: $" << pool/2 << endl;
         playerMoney+=(pool/2);
+        pool = 0;
     }
     //This function uses the highCard function to check for a winner. There are three outcomes, a win
     //Wherein the player will be rewarded the pool, a draw where they are rewarded half the pool, and a
     //lose. Where nothing happens, meaning pool is lost. 
 }
 
-void pairCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int pool, int& playerMoney){
+void pairCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int &pool, int& playerMoney){
     int playerPair = pairs(playerHandNum);
     int opponentPair = pairs(opponentHandNum);
 
@@ -441,14 +464,17 @@ void pairCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int pool, i
         cout << "You win with " << playerPair << " pair" << endl << "Winnings: $"
         << pool << endl;
         playerMoney+=pool;
+        pool = 0;
+
     }else if(opponentPair > playerPair){
         cout << "You lose." << endl << "Pool: $" << pool <<endl;
+        pool = 0;
     }else if(playerPair == opponentPair){
         highCheck(playerHandNum, opponentHandNum, pool, playerMoney);
     }
 }
 
-void threeCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int pool, int& playerMoney){
+void threeCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int &pool, int& playerMoney){
     bool playerthreeKind = threeKind(playerHandNum);
     bool opponentthreeKind = threeKind(opponentHandNum);
 
@@ -456,14 +482,16 @@ void threeCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int pool, 
         cout << "You win with a Three of a Kind!" << endl << "Winnings: $"
         << pool << endl;
         playerMoney+=pool;
+        pool = 0;
     }else if(opponentthreeKind && !playerthreeKind){
         cout << "You lose." << endl << "Pool: $" << pool <<endl;
+        pool = 0;
     }else if(playerthreeKind && opponentthreeKind){
         highCheck(playerHandNum, opponentHandNum, pool, playerMoney);
     }
 }
 
-void fourCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int pool, int& playerMoney){
+void fourCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int &pool, int& playerMoney){
     bool playerfourKind = fourKind(playerHandNum);
     bool opponentfourKind = fourKind(opponentHandNum);
 
@@ -471,14 +499,16 @@ void fourCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int pool, i
         cout << "You win with a Four of a Kind!" << endl << "Winnings: $"
         << pool << endl;
         playerMoney+=pool;
+        pool = 0;
     }else if(opponentfourKind && !playerfourKind){
         cout << "You lose." << endl << "Pool: $" << pool <<endl;
+        pool = 0;
     }else if(playerfourKind && opponentfourKind){
         highCheck(playerHandNum, opponentHandNum, pool, playerMoney);
     }
 }
 
-void flushCheck(vector<char>playerHand, vector<char>opponentHand,vector<int>playerHandNum, vector<int>opponentHandNum, int pool, int& playerMoney){
+void flushCheck(vector<char>playerHand, vector<char>opponentHand,vector<int>playerHandNum, vector<int>opponentHandNum, int &pool, int& playerMoney){
     bool playerFlush = flush(playerHand);
     bool opponentFlush = flush(opponentHand);
 
@@ -486,8 +516,10 @@ void flushCheck(vector<char>playerHand, vector<char>opponentHand,vector<int>play
         cout << "You win with a Flush!" << endl << "Winnings: $"
         << pool << endl;
         playerMoney+=pool;
+        pool = 0;
     }else if(opponentFlush && !playerFlush){
         cout << "You lose." << endl << "Pool: $" << pool <<endl;
+        pool = 0;
     }else if(playerFlush && opponentFlush){
         highCheck(playerHandNum, opponentHandNum, pool, playerMoney);
     }
