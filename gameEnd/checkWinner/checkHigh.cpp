@@ -8,9 +8,9 @@ void highCheck(vector<int>, vector<int>, int, int&);
 int main(){
     int playerMoney = 0;
     int pool = 90;
-    vector<int> playerHandNum = {5,1,11,3,11,9,9};
+    vector<int> playerHandNum = {1,10,11,3,11,9,9};
     vector<char> playerHandSuit = {};
-    vector<int> opponentHandNum = {3,1,11,3,11,9,9};
+    vector<int> opponentHandNum = {3,12,11,3,11,9,9};
     vector<char>opponentHandSuit ={};
 
     highCheck(playerHandNum, opponentHandNum, pool, playerMoney);
@@ -22,12 +22,12 @@ void highCheck(vector<int> playerHandNum, vector<int>opponentHandNum, int pool, 
     int playerHigh = highCard(playerHandNum);
     int opponentHigh = highCard(opponentHandNum);//return highest value card
     
-    if (playerHigh > opponentHigh){
+    if ((playerHigh > opponentHigh) || (playerHigh == 1 && opponentHigh != 1)){
         cout << "You win with a High Card!" << endl << "Winnings: $"
         << pool << endl;
         playerMoney+=pool;
         
-    }else if(opponentHigh > playerHigh){
+    }else if((opponentHigh > playerHigh) || (playerHigh != 1 && opponentHigh == 1)){
         cout << "You lose." << endl << "Pool: $" << pool <<endl;
     }else{
         cout << "Draw" << endl << "Split: $" << pool/2 << endl;

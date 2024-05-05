@@ -5,6 +5,10 @@
 #include<fstream>
 using namespace std;
 
+//Cameron Murphy
+//CIS-1111 final
+//Program for simple poker simulation
+
 //function prototypes
 
 int menu(int);

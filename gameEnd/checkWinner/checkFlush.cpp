@@ -10,7 +10,7 @@ int highCard(vector<int>handNum);
 int main(){
     vector<int> playerHandNum = {1,11,5,6,9,8,6,6,8};
     vector<int> opponentHandNum = {9,11,5,6,9,8,6,6,8};
-    vector<char> playerHandSuit = {'H','D','D','D','D','D','S'};
+    vector<char> playerHandSuit = {'D','H','D','H','D','D','S'};
     vector<char> opponentHandSuit = {'H','H','D','D','D','D','S'};
 
     int pool = 90,

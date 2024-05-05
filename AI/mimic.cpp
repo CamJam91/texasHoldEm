@@ -13,6 +13,10 @@ int main(){
     vector<int> opponentHandNum = {4,12}; 
     vector<char> opponentHandSuit = {'D','D'};
 
+    handMimic(playerHandNum,playerHandSuit, opponentHandNum, opponentHandSuit, 3);
+    handMimic(playerHandNum,playerHandSuit, opponentHandNum, opponentHandSuit, 4);
+    handMimic(playerHandNum,playerHandSuit, opponentHandNum, opponentHandSuit, 5);
+    handMimic(playerHandNum,playerHandSuit, opponentHandNum, opponentHandSuit, 6);
     handMimic(playerHandNum,playerHandSuit, opponentHandNum, opponentHandSuit, 7);
     for (int card = 0; card < 7; card++){
         cout << "Card " << card + 1<< ": " << opponentHandNum[card] << opponentHandSuit[card] << endl;

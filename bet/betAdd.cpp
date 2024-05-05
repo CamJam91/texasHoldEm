@@ -165,7 +165,7 @@ void draw(int (&cardNum)[52], char (&cardSuit)[52], vector<int>&handNum, vector<
 bool bet(int& stake, int& money){ //pass stake as a reference so we can add to it. Pass player or opponent money to affect it
     int bet = 0; //This holds bet to be added to stake. It ensures proper bet amount is entered
     int userOption = 0;
-    string betPrompt = "";  //This is so we can change prompt bsed on user input
+    string betPrompt = "";  //This is so we can change prompt based on user input
     string userPrompt = ""; //changes prompt based on user user input for 
     
     if (stake == 0){

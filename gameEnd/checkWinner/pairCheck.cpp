@@ -39,9 +39,12 @@ void pairCheck(vector<int>playerHandNum, vector<int>opponentHandNum, int pool, i
 int pairs(vector<int> handNum){
     int numberofPairs = 0;
     for (int card = 0; card < 6; card++){ //we dont need to check the lat card it will already be checked on next to last
-        for (int nextCard = card + 1; nextCard < 7; nextCard++){ //keeps card to check the same but loops through every other one
-            if (handNum[card] == handNum[nextCard])
+        bool matchFound = false;
+        for (int nextCard = card + 1; nextCard < 7 && !matchFound; nextCard++){ //keeps card to check the same but loops through every other one
+            if (handNum[card] == handNum[nextCard]){
                 numberofPairs++;
+                matchFound = true;
+            }
         }
     }
     return numberofPairs;
